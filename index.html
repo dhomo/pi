@@ -43,6 +43,7 @@ tr.header td {
 	font-size: 1.5em;
 	font-weight: 200;
 	color: #aaa;
+	cursor: pointer;
 }
 
 tr.header td i {
@@ -67,7 +68,7 @@ tr.header td i {
 .items li span {
 	white-space: nowrap;
 	cursor: pointer;
-	background-color: rgba(0, 0, 0, 0.75);
+	/*background-color: rgba(0, 0, 0, 0.75);*/
 	border-radius: 3px;
 	padding: 1px 4px;
 }
@@ -76,12 +77,15 @@ tr.footer {
 	display: none;
 }
 
+
+
+
+
 /*tr.footer td { color: #111; }
 	.p1 td,.p2 td,.p3 td,.p4 td,
 	.p1,.p2,.p3,.p4 { font-weight: 900 !important; }
 	.p1.current,.p2.current,.p3.current,.p4.current,
 	.p1.current td,.p2.current td,.p3.current td,.p4.current td { color: red; }*/
-
 
 #canvas {
 	z-index: 1;
@@ -99,10 +103,21 @@ tr.footer {
 	left: 0;
 	top: 0;
 }
+
+.out {
+	font-size: 10;
+}
+
+.desc:before {
+	content: "↓";
+}
+
+.asc:before {
+	content: "↑";
+}
 </style>
 
 <body>
-
 	<table id="pi" border="0" cellpadding="0" cellspacing="0" width="100%">
 		<tr class="header">
 			<td valign="top">Planets</td>
@@ -143,7 +158,7 @@ tr.footer {
 					<li class="lava">Felsic Magma</li>
 					<li class="ice lava plasma">Heavy Metals</li>
 					<li class="gas storm">Ionic Solutions</li>
-					<li class="barren ice oceanic temperate">Micro Organisms</li>
+					<li class="barren ice oceanic temperate">Microorganisms</li>
 					<li class="gas ice storm">Noble Gas</li>
 					<li class="barren plasma">Noble Metals</li>
 					<li class="lava plasma">Non-CS Crystals</li>
@@ -181,7 +196,7 @@ tr.footer {
 					<li class="felsic-magma">Silicon</li>
 					<li class="heavy-metals">Toxic Metals</li>
 					<li class="ionic-solutions">Electrolytes</li>
-					<li class="micro-organisms">Bacteria</li>
+					<li class="microorganisms">Bacteria</li>
 					<li class="noble-gas">Oxygen</li>
 					<li class="noble-metals">Precious Metals</li>
 					<li class="non-cs-crystals">Chiral Structures</li>
@@ -370,18 +385,16 @@ tr.footer {
 			<td style="width: 7%;">&nbsp;</td>
 		</tr>
 	</table>
-
-	<div>
+	<!-- <div>
 		<input type="checkbox" id="showCost">Show cost
 		<input type="radio" id="perItem" name="cost" value="perItem">
 		<label for="perItem">per Item</label>
 		<input type="radio" id="perBatch" name="cost" value="perBatch">
 		<label for="perBatch">per Batch</label>
-	</div>
-
+	</div> -->
 	<canvas id="canvas"></canvas>
 	<div style="position: fixed; bottom: 0; text-align: center; width: 100%;">
-		Based on https://hanns.io/pi/ &copy; 2007 Alysii LLC. &copy; 2008-2017 hanns.io All Rights Reserved.
+		Based on https://hanns.io/pi/
 		<br> Material related to EVE-Online is used with limited permission of CCP Games hf.
 		<br> No official affiliation or endorsement by CCP Games hf is stated or implied.
 		<br>
@@ -390,12 +403,6 @@ tr.footer {
 	</div>
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-
-
-
-
-
-
 <script>
 $(document).ready(function() {
 
@@ -422,6 +429,7 @@ $(document).ready(function() {
 				}
 			}
 		})
+
 	$('.items')
 		.on('mouseenter', 'ul li', function() {
 			if (!$('#pi').hasClass('sticky')) {
@@ -509,30 +517,52 @@ $(document).ready(function() {
 		}
 	);
 
-	var pi_data = [{ "Name": "Aqueous Liquids", "TypeID": 2268 }, { "Name": "Autotrophs", "TypeID": 2305 }, { "Name": "Base Metals", "TypeID": 2267 }, { "Name": "Carbon Compounds", "TypeID": 2288 }, { "Name": "Complex Organisms", "TypeID": 2287 }, { "Name": "Felsic Magma", "TypeID": 2307 }, { "Name": "Heavy Metals", "TypeID": 2272 }, { "Name": "Ionic Solutions", "TypeID": 2309 }, { "Name": "Microorganisms", "TypeID": 2073 }, { "Name": "Noble Gas", "TypeID": 2310 }, { "Name": "Noble Metals", "TypeID": 2270 }, { "Name": "Non-CS Crystals", "TypeID": 2306 }, { "Name": "Planktic Colonies", "TypeID": 2286 }, { "Name": "Reactive Gas", "TypeID": 2311 }, { "Name": "Suspended Plasma", "TypeID": 2308 }, { "Name": "Bacteria", "TypeID": 2393 }, { "Name": "Biofuels", "TypeID": 2396 }, { "Name": "Biomass", "TypeID": 3779 }, { "Name": "Chiral Structures", "TypeID": 2401 }, { "Name": "Electrolytes", "TypeID": 2390 }, { "Name": "Industrial Fibers", "TypeID": 2397 }, { "Name": "Oxidizing Compound", "TypeID": 2392 }, { "Name": "Oxygen", "TypeID": 3683 }, { "Name": "Plasmoids", "TypeID": 2389 }, { "Name": "Precious Metals", "TypeID": 2399 }, { "Name": "Proteins", "TypeID": 2395 }, { "Name": "Reactive Metals", "TypeID": 2398 }, { "Name": "Silicon", "TypeID": 9828 }, { "Name": "Toxic Metals", "TypeID": 2400 }, { "Name": "Water", "TypeID": 3645 }, { "Name": "Biocells", "TypeID": 2329 }, { "Name": "Construction Blocks", "TypeID": 3828 }, { "Name": "Consumer Electronics", "TypeID": 9836 }, { "Name": "Coolant", "TypeID": 9832 }, { "Name": "Enriched Uranium", "TypeID": 44 }, { "Name": "Fertilizer", "TypeID": 3693 }, { "Name": "Genetically Enhanced Livestock", "TypeID": 15317 }, { "Name": "Livestock", "TypeID": 3725 }, { "Name": "Mechanical Parts", "TypeID": 3689 }, { "Name": "Microfiber Shielding", "TypeID": 2327 }, { "Name": "Miniature Electronics", "TypeID": 9842 }, { "Name": "Nanites", "TypeID": 2463 }, { "Name": "Oxides", "TypeID": 2317 }, { "Name": "Polyaramids", "TypeID": 2321 }, { "Name": "Polytextiles", "TypeID": 3695 }, { "Name": "Rocket Fuel", "TypeID": 9830 }, { "Name": "Silicate Glass", "TypeID": 3697 }, { "Name": "SuperConductors", "TypeID": 9838 }, { "Name": "Supertensile Plastics", "TypeID": 2312 }, { "Name": "Synthetic Oil", "TypeID": 3691 }, { "Name": "Test Cultures", "TypeID": 2319 }, { "Name": "Transmitter", "TypeID": 9840 }, { "Name": "Viral Agent", "TypeID": 3775 }, { "Name": "Water-Cooled CPU", "TypeID": 2328 }, { "Name": "Biotech Research Reports", "TypeID": 2358 }, { "Name": "Camera Drones", "TypeID": 2345 }, { "Name": "Condensates", "TypeID": 2344 }, { "Name": "Cryoprotectant Solution", "TypeID": 2367 }, { "Name": "Data Chips", "TypeID": 17392 }, { "Name": "Gel-Matrix Biopaste", "TypeID": 2348 }, { "Name": "Guidance Systems", "TypeID": 9834 }, { "Name": "Hazmat Detection Systems", "TypeID": 2366 }, { "Name": "Hermetic Membranes", "TypeID": 2361 }, { "Name": "High-Tech Transmitters", "TypeID": 17898 }, { "Name": "Industrial Explosives", "TypeID": 2360 }, { "Name": "Neocoms", "TypeID": 2354 }, { "Name": "Nuclear Reactors", "TypeID": 2352 }, { "Name": "Planetary Vehicles", "TypeID": 9846 }, { "Name": "Robotics", "TypeID": 9848 }, { "Name": "Smartfab Units", "TypeID": 2351 }, { "Name": "Supercomputers", "TypeID": 2349 }, { "Name": "Synthetic Synapses", "TypeID": 2346 }, { "Name": "Transcranial Microcontrollers", "TypeID": 12836 }, { "Name": "Ukomi Super Conductors", "TypeID": 17136 }, { "Name": "Vaccines", "TypeID": 28974 }, { "Name": "Broadcast Node", "TypeID": 2867 }, { "Name": "Integrity Response Drones", "TypeID": 2868 }, { "Name": "Nano-Factory", "TypeID": 2869 }, { "Name": "Organic Mortar Applicators", "TypeID": 2870 }, { "Name": "Recursive Computing Module", "TypeID": 2871 }, { "Name": "Self-Harmonizing Power Core", "TypeID": 2872 }, { "Name": "Sterile Conduits", "TypeID": 2875 }, { "Name": "Wetware Mainframe", "TypeID": 2876 }, { "Name": "Nanite Repair Paste", "TypeID": 28668 }];
+	var pi_data = [{ "name": "Aqueous Liquids", "type_id": 2268 }, { "name": "Autotrophs", "type_id": 2305 }, { "name": "Base Metals", "type_id": 2267 }, { "name": "Carbon Compounds", "type_id": 2288 }, { "name": "Complex Organisms", "type_id": 2287 }, { "name": "Felsic Magma", "type_id": 2307 }, { "name": "Heavy Metals", "type_id": 2272 }, { "name": "Ionic Solutions", "type_id": 2309 }, { "name": "Microorganisms", "type_id": 2073 }, { "name": "Noble Gas", "type_id": 2310 }, { "name": "Noble Metals", "type_id": 2270 }, { "name": "Non-CS Crystals", "type_id": 2306 }, { "name": "Planktic Colonies", "type_id": 2286 }, { "name": "Reactive Gas", "type_id": 2311 }, { "name": "Suspended Plasma", "type_id": 2308 }, { "name": "Bacteria", "type_id": 2393 }, { "name": "Biofuels", "type_id": 2396 }, { "name": "Biomass", "type_id": 3779 }, { "name": "Chiral Structures", "type_id": 2401 }, { "name": "Electrolytes", "type_id": 2390 }, { "name": "Industrial Fibers", "type_id": 2397 }, { "name": "Oxidizing Compound", "type_id": 2392 }, { "name": "Oxygen", "type_id": 3683 }, { "name": "Plasmoids", "type_id": 2389 }, { "name": "Precious Metals", "type_id": 2399 }, { "name": "Proteins", "type_id": 2395 }, { "name": "Reactive Metals", "type_id": 2398 }, { "name": "Silicon", "type_id": 9828 }, { "name": "Toxic Metals", "type_id": 2400 }, { "name": "Water", "type_id": 3645 }, { "name": "Biocells", "type_id": 2329 }, { "name": "Construction Blocks", "type_id": 3828 }, { "name": "Consumer Electronics", "type_id": 9836 }, { "name": "Coolant", "type_id": 9832 }, { "name": "Enriched Uranium", "type_id": 44 }, { "name": "Fertilizer", "type_id": 3693 }, { "name": "Gen. Enhanced Livestock", "type_id": 15317 }, { "name": "Livestock", "type_id": 3725 }, { "name": "Mechanical Parts", "type_id": 3689 }, { "name": "Microfiber Shielding", "type_id": 2327 }, { "name": "Miniature Electronics", "type_id": 9842 }, { "name": "Nanites", "type_id": 2463 }, { "name": "Oxides", "type_id": 2317 }, { "name": "Polyaramids", "type_id": 2321 }, { "name": "Polytextiles", "type_id": 3695 }, { "name": "Rocket Fuel", "type_id": 9830 }, { "name": "Silicate Glass", "type_id": 3697 }, { "name": "SuperConductors", "type_id": 9838 }, { "name": "Supertensile Plastics", "type_id": 2312 }, { "name": "Synthetic Oil", "type_id": 3691 }, { "name": "Test Cultures", "type_id": 2319 }, { "name": "Transmitter", "type_id": 9840 }, { "name": "Viral Agent", "type_id": 3775 }, { "name": "Water-Cooled CPU", "type_id": 2328 }, { "name": "Biotech Research Reports", "type_id": 2358 }, { "name": "Camera Drones", "type_id": 2345 }, { "name": "Condensates", "type_id": 2344 }, { "name": "Cryoprotectant Solution", "type_id": 2367 }, { "name": "Data Chips", "type_id": 17392 }, { "name": "Gel-Matrix Biopaste", "type_id": 2348 }, { "name": "Guidance Systems", "type_id": 9834 }, { "name": "Hazmat Detection Systems", "type_id": 2366 }, { "name": "Hermetic Membranes", "type_id": 2361 }, { "name": "High-Tech Transmitters", "type_id": 17898 }, { "name": "Industrial Explosives", "type_id": 2360 }, { "name": "Neocoms", "type_id": 2354 }, { "name": "Nuclear Reactors", "type_id": 2352 }, { "name": "Planetary Vehicles", "type_id": 9846 }, { "name": "Robotics", "type_id": 9848 }, { "name": "Smartfab Units", "type_id": 2351 }, { "name": "Supercomputers", "type_id": 2349 }, { "name": "Synthetic Synapses", "type_id": 2346 }, { "name": "Transcranial Microcontrollers", "type_id": 12836 }, { "name": "Ukomi Super Conductors", "type_id": 17136 }, { "name": "Vaccines", "type_id": 28974 }, { "name": "Broadcast Node", "type_id": 2867 }, { "name": "Integrity Response Drones", "type_id": 2868 }, { "name": "Nano-Factory", "type_id": 2869 }, { "name": "Organic Mortar Applicators", "type_id": 2870 }, { "name": "Recursive Computing Module", "type_id": 2871 }, { "name": "Self-Harmonizing Power Core", "type_id": 2872 }, { "name": "Sterile Conduits", "type_id": 2875 }, { "name": "Wetware Mainframe", "type_id": 2876 }];
 
-	function replaceOnDocument(pattern, string) {
-		Array.from(document.querySelectorAll("body, body *:not(script):not(noscript):not(style)"))
-			.forEach(someNode => Array.from(someNode.childNodes)
-				.filter(childNode => childNode.nodeType == 3)
-				.forEach(textNode => textNode.textContent = textNode.textContent.replace(pattern, string)));
-	}
 
+	// загрузка цен
 	$.getJSON("https://esi.tech.ccp.is/latest/markets/prices/?datasource=tranquility", function(json) {
 		console.log("markets prices downloaded");
 		for (var i = 0; i < pi_data.length; i++) {
 			for (var j = 0; j < json.length; j++) {
-				if (pi_data[i].TypeID === json[j].type_id) {
-					pi_data[i].average_price = json[j].average_price;
-					console.log(pi_data[i].Name + ": " + pi_data[i].average_price);
-					//debugger;
-					var re = new RegExp(pi_data[i].Name + "$", "g");
-					replaceOnDocument(re, pi_data[i].Name + ": " + pi_data[i].average_price);
+				if (pi_data[i].type_id === json[j].type_id) {
+					var price = json[j].average_price;
+					pi_data[i].average_price = price
+					var item = lower_case(pi_data[i].name);
+					$("#" + item).data("price", price);
+					$("#" + item + " span").append("<span class='out'> " + format_price(price) + "</span>");
+					console.log(pi_data[i].name + ": " + price);
 				}
 			}
 		}
 	});
+
+
+	// сортировка
+	$(".header td[colspan='3']").on('click', function() {
+		var ul = $("table tr:eq(1) td:eq(" + $(this).index() + ") ul")
+		if ($(this).hasClass("desc")) {
+			$(this).removeClass("desc").addClass("asc");
+			$(ul).children("li").sort(sort_asc) //сортировка
+				.appendTo(ul); // append again to the list
+			return;
+		}
+		if (($(this).hasClass("asc")) || !($(this).hasClass("desc"))) {
+			$(this).removeClass("asc").addClass("desc");
+			$(ul).children("li").sort(sort_desc) //сортировка
+				.appendTo(ul); // append again to the list
+			return;
+		}
+		function sort_asc(a, b) { return ($(b).data('price')) < ($(a).data('price')) ? 1 : -1; }		
+		// desc по убыванию
+		function sort_desc(a, b) { return ($(b).data('price')) > ($(a).data('price')) ? 1 : -1; }
+	});
 });
+
+function format_price(price) {
+	if (price < 100) return (price);
+	return price.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
 
 function canvas() {
 	$("#canvas").attr({
@@ -563,17 +593,5 @@ function line(a, b, c1, c2) {
 
 	ctx.strokeStyle = gdt;
 	ctx.stroke();
-}
-
-
-pi = {
-	planets: ['Barren', 'Gas', 'Ice', 'Lava', 'Oceanic', 'Plasma', 'Storm', 'Temperate'],
-	resources: ['Aqueous Liquids', 'Autotrophs', 'Base Metals', 'Carbon Compounds', 'Complex Organisms', 'Felsic Magma', 'Heavy Metals', 'Ionic Solutions', 'Micro Organisms', 'Noble Gas', 'Noble Metals', 'Non-CS Crystals', 'Planktic Colonies', 'Reactive Gas', 'Suspended Plasma'],
-	productions: {
-		basic: ['Water', 'Industrial Fibers', 'Reactive Metals', 'Biofuels', 'Proteins', 'Silicon', 'Toxic Metals', 'Electrolytes', 'Bacteria', 'Oxygen', 'Precious Metals', 'Chiral Structures', 'Biomass', 'Oxidizing Compound', 'Plasmoids'],
-		refined: ['Biocells', 'Construction Blocks', 'Consumer Electronics', 'Coolant', 'Enriched Uranium', 'Fertilizer', 'Gen. Enhanced Livestock', 'Livestock', 'Mechanical Parts', 'Microfiber Shielding', 'Miniature Electronics', 'Nanites', 'Oxides', 'Polyaramids', 'Polytextiles', 'Rocket Fuel', 'Silicate Glass', 'Superconductors', 'Supertensile Plastics', 'Synthetic Oil', 'Test Cultures', 'Transmitter', 'Viral Agent', 'Water-Cooled CPU'],
-		specialized: ['Biotech Research Reports', 'Camera Drones', 'Condensates', 'Cryoprotectant Solution', 'Data Chips', 'Gel-Matrix Biopaste', 'Guidance Systems', 'Hazmat Detection Systems', 'Hermetic Membranes', 'High-Tech Transmitters', 'Industrial Explosives', 'Neocoms', 'Nuclear Reactors', 'Planetary Vehicles', 'Robotics', 'Smartfab Units', 'Supercomputers', 'Synthetic Synapses', 'Transcranial Microcontrollers', 'Ukomi Super Conductors', 'Vaccines'],
-		advanced: ['Broadcast Node', 'Integrity Response Drones', 'Nano-Factory', 'Organic Mortar Applicators', 'Recursive Computing Module', 'Self-Harmonizing Power Core', 'Sterile Conduits', 'Wetware Mainframe']
-	}
 }
 </script>
