@@ -121,19 +121,20 @@ tr.footer {
 	<table id="pi" border="0" cellpadding="0" cellspacing="0" width="100%">
 		<tr class="header">
 			<td valign="top">Planets</td>
-			<td valign="top" colspan="3" style="text-align: right;">Resources</td>
+			<td valign="top" colspan="3" style="text-align: right;">Resources
+				<br> <i>P0 - x<span class="mult" data-mult="24000">24000</span></i></td>
 			<td valign="top"></td>
 			<td valign="top" colspan="3" style="text-align: left;">Basic
-				<br> <i>P1 - 1800s</i></td>
+				<br> <i>P1 - x<span class="mult" data-mult="160">160</span></i></td>
 			<td valign="top"></td>
 			<td valign="top" colspan="3">Refined
-				<br> <i>P2 - 3600s</i></td>
+				<br> <i>P2 - x<span class="mult" data-mult="20">20</span></i></td>
 			<td valign="top"></td>
 			<td valign="top" colspan="3">Specialized
-				<br> <i>P3 - 3600s</i></td>
+				<br> <i>P3 - x<span class="mult" data-mult="6">6</span></i></td>
 			<td valign="top"></td>
 			<td valign="top" colspan="3">Advanced
-				<br> <i>P4 - 3600s</i></td>
+				<br> <i>P4 - x<span class="mult" data-mult="1">1</span></i></td>
 		</tr>
 		<tr>
 			<td class="items">
@@ -385,32 +386,31 @@ tr.footer {
 			<td style="width: 7%;">&nbsp;</td>
 		</tr>
 	</table>
-	<!-- <div>
-		<input type="checkbox" id="showCost">Show cost
-		<input type="radio" id="perItem" name="cost" value="perItem">
-		<label for="perItem">per Item</label>
-		<input type="radio" id="perBatch" name="cost" value="perBatch">
-		<label for="perBatch">per Batch</label>
-	</div> -->
+	<div>
+		<input type="checkbox" id="showCost" checked>Show cost 
+		<div id="CostRadio" style="display: inline">
+			<input type="radio" id="perItem" name="cost" value="perItem">
+			<label for="perItem">per Item</label>
+			<input type="radio" id="perBatch" name="cost" value="perBatch" checked>
+			<label for="perBatch">per Batch</label>
+		</div>
+	</div>
 	<canvas id="canvas"></canvas>
 	<div style="position: fixed; bottom: 0; text-align: center; width: 100%;">
-		Based on https://hanns.io/pi/
-		<br> Material related to EVE-Online is used with limited permission of CCP Games hf.
-		<br> No official affiliation or endorsement by CCP Games hf is stated or implied.
-		<br>
+		Use ESI average price
+		<br> Based on https://hanns.io/pi/
 		<br>
 		<small style="font-size: 0.6em">EVE Online and the EVE logo are the registered trademarks of CCP hf. All rights are reserved worldwide. All other trademarks are the property of their respective owners. EVE Online, the EVE logo, EVE and all associated logos and designs are the intellectual property of CCP hf. All artwork, screenshots, characters, vehicles, storylines, world facts or other recognizable features of the intellectual property relating to these trademarks are likewise the intellectual property of CCP hf. CCP hf. has granted permission to [insert your name or site name] to use EVE Online and all associated logos and designs for promotional and information purposes on its website but does not endorse, and is not in any way affiliated with, [insert name or site name]. CCP is in no way responsible for the content on or functioning of this website, nor can it be liable for any damage arising from the use of this website.</small>
 	</div>
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-
 <script>
 /*eslint-env jquery, browser */
 /*eslint quotes: "warn", no-console: "off" */
 
 var colors = ["#666", "#492f1f", "#763c19", "#f7941d", "yellow", "#79cef4", "#00aeef", "lime", "green", "#304b15"];
 
-$(document).ready(function() {	
+$(document).ready(function() {
 	$(".items li").css({ color: colors[0] });
 
 	canvas();
@@ -449,7 +449,6 @@ $(document).ready(function() {
 			}
 		})
 		.on("click", "ul li", function() {
-
 			if (!$(this).hasClass("current")) {
 				$("#pi").removeClass("sticky");
 			}
@@ -470,55 +469,20 @@ $(document).ready(function() {
 			}
 		});
 
+
 	// $("ul#basic").hover(function() { $(".p1").toggleClass("current"); });
 	// $("ul#refined").hover(function() { $(".p2").toggleClass("current"); });
 	// $("ul#specialized").hover(function() { $(".p3").toggleClass("current"); });
 	// $("ul#advanced").hover(function() { $(".p4").toggleClass("current"); });
 
-	function lower_case(s) { return s.toLowerCase().replace(/ /g, "-").replace(/\./g, ""); }
-
-	function pi_link(item) {
-		pi_link_before(item, -1);
-		pi_link_after(item, 1);
-	}
-
-	function pi_link_before(item, degree, depth) {
-		var type = item.parent("ul").attr("id");
-		degree = degree + ((type == "basic") ? 1 : 0);
-
-		// var class_prefex = ".items li span.";
-		$(".items li span." + item.attr("id"))
-			.each(function() {
-				$(this).parent("li").css({ color: colors[5 + degree] });
-				if (type != "basic" && degree > -4) {
-					line(item.children("span"), $(this), colors[5 + degree], colors[5 + degree + 1]);
-				}
-				pi_link_before($(this).parent("li"), degree - 1);
-			});
-	}
-
-	function pi_link_after(item, degree, depth) {
-		var type = item.parent("ul").attr("id");
-		degree = degree + ((type == "resources") ? -1 : 0);
-
-		$(".items li." + item.attr("id"))
-			.each(function() {
-				$(this).css({ color: colors[5 + degree] });
-				if (type != "resources" && degree < 3) {
-					line($(this).children("span"), item.children("span"), colors[5 + degree - 1], colors[5 + degree]);
-				}
-				pi_link_after($(this), degree + 1);
-			});
-	}
-
-	$("#disco").toggle(
-		function() {
-			$(this).text("Disco!");
-		},
-		function() {
-			$(this).text("Planets");
-		}
-	);
+	// $("#disco").toggle(
+	// 	function() {
+	// 		$(this).text("Disco!");
+	// 	},
+	// 	function() {
+	// 		$(this).text("Planets");
+	// 	}
+	// );
 
 	var pi_data = [{ "name": "Aqueous Liquids", "type_id": 2268 }, { "name": "Autotrophs", "type_id": 2305 }, { "name": "Base Metals", "type_id": 2267 }, { "name": "Carbon Compounds", "type_id": 2288 }, { "name": "Complex Organisms", "type_id": 2287 }, { "name": "Felsic Magma", "type_id": 2307 }, { "name": "Heavy Metals", "type_id": 2272 }, { "name": "Ionic Solutions", "type_id": 2309 }, { "name": "Microorganisms", "type_id": 2073 }, { "name": "Noble Gas", "type_id": 2310 }, { "name": "Noble Metals", "type_id": 2270 }, { "name": "Non-CS Crystals", "type_id": 2306 }, { "name": "Planktic Colonies", "type_id": 2286 }, { "name": "Reactive Gas", "type_id": 2311 }, { "name": "Suspended Plasma", "type_id": 2308 }, { "name": "Bacteria", "type_id": 2393 }, { "name": "Biofuels", "type_id": 2396 }, { "name": "Biomass", "type_id": 3779 }, { "name": "Chiral Structures", "type_id": 2401 }, { "name": "Electrolytes", "type_id": 2390 }, { "name": "Industrial Fibers", "type_id": 2397 }, { "name": "Oxidizing Compound", "type_id": 2392 }, { "name": "Oxygen", "type_id": 3683 }, { "name": "Plasmoids", "type_id": 2389 }, { "name": "Precious Metals", "type_id": 2399 }, { "name": "Proteins", "type_id": 2395 }, { "name": "Reactive Metals", "type_id": 2398 }, { "name": "Silicon", "type_id": 9828 }, { "name": "Toxic Metals", "type_id": 2400 }, { "name": "Water", "type_id": 3645 }, { "name": "Biocells", "type_id": 2329 }, { "name": "Construction Blocks", "type_id": 3828 }, { "name": "Consumer Electronics", "type_id": 9836 }, { "name": "Coolant", "type_id": 9832 }, { "name": "Enriched Uranium", "type_id": 44 }, { "name": "Fertilizer", "type_id": 3693 }, { "name": "Gen. Enhanced Livestock", "type_id": 15317 }, { "name": "Livestock", "type_id": 3725 }, { "name": "Mechanical Parts", "type_id": 3689 }, { "name": "Microfiber Shielding", "type_id": 2327 }, { "name": "Miniature Electronics", "type_id": 9842 }, { "name": "Nanites", "type_id": 2463 }, { "name": "Oxides", "type_id": 2317 }, { "name": "Polyaramids", "type_id": 2321 }, { "name": "Polytextiles", "type_id": 3695 }, { "name": "Rocket Fuel", "type_id": 9830 }, { "name": "Silicate Glass", "type_id": 3697 }, { "name": "SuperConductors", "type_id": 9838 }, { "name": "Supertensile Plastics", "type_id": 2312 }, { "name": "Synthetic Oil", "type_id": 3691 }, { "name": "Test Cultures", "type_id": 2319 }, { "name": "Transmitter", "type_id": 9840 }, { "name": "Viral Agent", "type_id": 3775 }, { "name": "Water-Cooled CPU", "type_id": 2328 }, { "name": "Biotech Research Reports", "type_id": 2358 }, { "name": "Camera Drones", "type_id": 2345 }, { "name": "Condensates", "type_id": 2344 }, { "name": "Cryoprotectant Solution", "type_id": 2367 }, { "name": "Data Chips", "type_id": 17392 }, { "name": "Gel-Matrix Biopaste", "type_id": 2348 }, { "name": "Guidance Systems", "type_id": 9834 }, { "name": "Hazmat Detection Systems", "type_id": 2366 }, { "name": "Hermetic Membranes", "type_id": 2361 }, { "name": "High-Tech Transmitters", "type_id": 17898 }, { "name": "Industrial Explosives", "type_id": 2360 }, { "name": "Neocoms", "type_id": 2354 }, { "name": "Nuclear Reactors", "type_id": 2352 }, { "name": "Planetary Vehicles", "type_id": 9846 }, { "name": "Robotics", "type_id": 9848 }, { "name": "Smartfab Units", "type_id": 2351 }, { "name": "Supercomputers", "type_id": 2349 }, { "name": "Synthetic Synapses", "type_id": 2346 }, { "name": "Transcranial Microcontrollers", "type_id": 12836 }, { "name": "Ukomi Super Conductors", "type_id": 17136 }, { "name": "Vaccines", "type_id": 28974 }, { "name": "Broadcast Node", "type_id": 2867 }, { "name": "Integrity Response Drones", "type_id": 2868 }, { "name": "Nano-Factory", "type_id": 2869 }, { "name": "Organic Mortar Applicators", "type_id": 2870 }, { "name": "Recursive Computing Module", "type_id": 2871 }, { "name": "Self-Harmonizing Power Core", "type_id": 2872 }, { "name": "Sterile Conduits", "type_id": 2875 }, { "name": "Wetware Mainframe", "type_id": 2876 }];
 
@@ -529,14 +493,34 @@ $(document).ready(function() {
 		for (var i = 0; i < pi_data.length; i++) {
 			for (var j = 0; j < json.length; j++) {
 				if (pi_data[i].type_id === json[j].type_id) {
-					var price = json[j].average_price;
-					pi_data[i].average_price = price;
-					var item = lower_case(pi_data[i].name);
-					$("#" + item).data("price", price);
-					$("#" + item + " span").append("<span class='out'> " + format_price(price) + "</span>");
-					console.log(pi_data[i].name + ": " + price);
+					// pi_data[i].average_price = price;
+					$("#" + lower_case(pi_data[i].name)).data("price", json[j].average_price)
+						.append("<span class='out'></span>");
+					console.log(pi_data[i].name + ": " + json[j].average_price);
 				}
 			}
+		}
+		draw_price();
+		console.log("draw price done");
+	});
+
+	$("input:radio[name='cost']").change(function() {
+		if (this.checked && this.value == "perItem") {
+			$(".header .mult").text(1);
+		}
+		if (this.checked && this.value == "perBatch") {
+			$(".header .mult").each(function() {
+				$(this).text($(this).data("mult"));
+			});
+		}
+		draw_price();
+	});
+
+	$("#showCost").change(function() {
+		if (this.checked) {
+			$(".out, .mult, #CostRadio").show();
+		} else {
+			$(".out, .mult, #CostRadio").hide();
 		}
 	});
 
@@ -556,11 +540,57 @@ $(document).ready(function() {
 				.appendTo(ul); // append again to the list
 			return;
 		}
-		function sort_asc(a, b) { return ($(b).data("price")) < ($(a).data("price")) ? 1 : -1; }		
-		// desc по убыванию
-		function sort_desc(a, b) { return ($(b).data("price")) > ($(a).data("price")) ? 1 : -1; }
 	});
 });
+
+function lower_case(s) { return s.toLowerCase().replace(/ /g, "-").replace(/\./g, ""); }
+
+function pi_link(item) {
+	pi_link_before(item, -1);
+	pi_link_after(item, 1);
+}
+
+function pi_link_before(item, degree, depth) {
+	var type = item.parent("ul").attr("id");
+	degree = degree + ((type == "basic") ? 1 : 0);
+
+	// var class_prefex = ".items li span.";
+	$(".items li span." + item.attr("id"))
+		.each(function() {
+			$(this).parent("li").css({ color: colors[5 + degree] });
+			if (type != "basic" && degree > -4) {
+				line(item.children("span"), $(this), colors[5 + degree], colors[5 + degree + 1]);
+			}
+			pi_link_before($(this).parent("li"), degree - 1);
+		});
+}
+
+function pi_link_after(item, degree, depth) {
+	var type = item.parent("ul").attr("id");
+	degree = degree + ((type == "resources") ? -1 : 0);
+
+	$(".items li." + item.attr("id"))
+		.each(function() {
+			$(this).css({ color: colors[5 + degree] });
+			if (type != "resources" && degree < 3) {
+				line($(this).children("span"), item.children("span"), colors[5 + degree - 1], colors[5 + degree]);
+			}
+			pi_link_after($(this), degree + 1);
+		});
+}
+
+function draw_price() {
+	$(".out")
+		.each(function() {
+			var price = $(this).parent().data("price");
+			var mult = $("table tr:eq(0) td:eq(" + $(this).parents("td").index() + ") .mult").text();
+			$(this).text(format_price(price * mult));
+		});
+}
+
+function sort_asc(a, b) { return ($(b).data("price")) < ($(a).data("price")) ? 1 : -1; }
+// desc по убыванию
+function sort_desc(a, b) { return ($(b).data("price")) > ($(a).data("price")) ? 1 : -1; }
 
 function format_price(price) {
 	if (price < 100) return (price);
