@@ -1,5 +1,5 @@
 <title>
-	Alysii's PI Scheme</title>
+	Alysii"s PI Scheme</title>
 <style type="text/css" media="screen">
 body {
 	background-color: #000;
@@ -403,10 +403,14 @@ tr.footer {
 	</div>
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script>
-$(document).ready(function() {
 
-	var colors = ["#666", "#492f1f", "#763c19", "#f7941d", "yellow", "#79cef4", "#00aeef", "lime", "green", "#304b15"];
+<script>
+/*eslint-env jquery, browser */
+/*eslint quotes: "warn", no-console: "off" */
+
+var colors = ["#666", "#492f1f", "#763c19", "#f7941d", "yellow", "#79cef4", "#00aeef", "lime", "green", "#304b15"];
+
+$(document).ready(function() {	
 	$(".items li").css({ color: colors[0] });
 
 	canvas();
@@ -416,63 +420,62 @@ $(document).ready(function() {
 
 	// distribute before list to span
 	$(".items ul li")
-		.wrapInner($('<span />'))
+		.wrapInner($("<span />"))
 		.each(function() {
-
-			item = lower_case($(this).children("span").html()); // turn item name css compliant
+			var item = lower_case($(this).children("span").html()); // turn item name css compliant
 			$(this).attr({ id: item }); // set li id as item name
 
 			if ($(this).parents("ul").attr("id") != "planets") { // planets has no before
-				list = $(this).attr("class").split(/\s+/); // get before items from li class
-				for (i in list) {
+				var list = $(this).attr("class").split(/\s+/); // get before items from li class
+				for (var i in list) {
 					$("#" + list[i] + " span").addClass(item); // find id with class, inject itself into span as class
 				}
 			}
-		})
+		});
 
-	$('.items')
-		.on('mouseenter', 'ul li', function() {
-			if (!$('#pi').hasClass('sticky')) {
+	$(".items")
+		.on("mouseenter", "ul li", function() {
+			if (!$("#pi").hasClass("sticky")) {
 				$(this).addClass("current");
 				$(this).css({ color: colors[5] });
 				pi_link($(this));
 			}
 		})
-		.on('mouseleave', 'ul li', function() {
-			if (!$('#pi').hasClass('sticky')) {
+		.on("mouseleave", "ul li", function() {
+			if (!$("#pi").hasClass("sticky")) {
 				$(this).removeClass("current");
 				$(".items li").css({ color: colors[0] });
 				canvas();
 			}
 		})
-		.on('click', 'ul li', function() {
+		.on("click", "ul li", function() {
 
-			if (!$(this).hasClass('current')) {
-				$('#pi').removeClass('sticky')
+			if (!$(this).hasClass("current")) {
+				$("#pi").removeClass("sticky");
 			}
 
-			if ($('#pi').hasClass('sticky')) {
-				$('#pi').removeClass('sticky')
+			if ($("#pi").hasClass("sticky")) {
+				$("#pi").removeClass("sticky");
 
-				$('.items li').removeClass('current').css({ color: colors[0] });
+				$(".items li").removeClass("current").css({ color: colors[0] });
 			} else {
-				$('#pi').addClass('sticky')
+				$("#pi").addClass("sticky");
 
-				$('.items li').removeClass('current').css({ color: colors[0] });
+				$(".items li").removeClass("current").css({ color: colors[0] });
 				canvas();
 
 				$(this).addClass("current");
 				$(this).css({ color: colors[5] });
 				pi_link($(this));
 			}
-		})
+		});
 
 	// $("ul#basic").hover(function() { $(".p1").toggleClass("current"); });
 	// $("ul#refined").hover(function() { $(".p2").toggleClass("current"); });
 	// $("ul#specialized").hover(function() { $(".p3").toggleClass("current"); });
 	// $("ul#advanced").hover(function() { $(".p4").toggleClass("current"); });
 
-	function lower_case(s) { return s.toLowerCase().replace(/ /g, '-').replace(/\./g, ''); }
+	function lower_case(s) { return s.toLowerCase().replace(/ /g, "-").replace(/\./g, ""); }
 
 	function pi_link(item) {
 		pi_link_before(item, -1);
@@ -480,10 +483,10 @@ $(document).ready(function() {
 	}
 
 	function pi_link_before(item, degree, depth) {
-		type = item.parent("ul").attr("id");
+		var type = item.parent("ul").attr("id");
 		degree = degree + ((type == "basic") ? 1 : 0);
 
-		class_prefex = ".items li span.";
+		// var class_prefex = ".items li span.";
 		$(".items li span." + item.attr("id"))
 			.each(function() {
 				$(this).parent("li").css({ color: colors[5 + degree] });
@@ -495,7 +498,7 @@ $(document).ready(function() {
 	}
 
 	function pi_link_after(item, degree, depth) {
-		type = item.parent("ul").attr("id");
+		var type = item.parent("ul").attr("id");
 		degree = degree + ((type == "resources") ? -1 : 0);
 
 		$(".items li." + item.attr("id"))
@@ -527,7 +530,7 @@ $(document).ready(function() {
 			for (var j = 0; j < json.length; j++) {
 				if (pi_data[i].type_id === json[j].type_id) {
 					var price = json[j].average_price;
-					pi_data[i].average_price = price
+					pi_data[i].average_price = price;
 					var item = lower_case(pi_data[i].name);
 					$("#" + item).data("price", price);
 					$("#" + item + " span").append("<span class='out'> " + format_price(price) + "</span>");
@@ -539,8 +542,8 @@ $(document).ready(function() {
 
 
 	// сортировка
-	$(".header td[colspan='3']").on('click', function() {
-		var ul = $("table tr:eq(1) td:eq(" + $(this).index() + ") ul")
+	$(".header td[colspan='3']").on("click", function() {
+		var ul = $("table tr:eq(1) td:eq(" + $(this).index() + ") ul");
 		if ($(this).hasClass("desc")) {
 			$(this).removeClass("desc").addClass("asc");
 			$(ul).children("li").sort(sort_asc) //сортировка
@@ -553,9 +556,9 @@ $(document).ready(function() {
 				.appendTo(ul); // append again to the list
 			return;
 		}
-		function sort_asc(a, b) { return ($(b).data('price')) < ($(a).data('price')) ? 1 : -1; }		
+		function sort_asc(a, b) { return ($(b).data("price")) < ($(a).data("price")) ? 1 : -1; }		
 		// desc по убыванию
-		function sort_desc(a, b) { return ($(b).data('price')) > ($(a).data('price')) ? 1 : -1; }
+		function sort_desc(a, b) { return ($(b).data("price")) > ($(a).data("price")) ? 1 : -1; }
 	});
 });
 
@@ -572,15 +575,15 @@ function canvas() {
 }
 
 function line(a, b, c1, c2) {
-	pad = 0;
-	fx = a.position().left + 4;
-	fy = a.position().top + a.height() / 2 + 1;
-	tx = b.position().left + b.width() + 2;
-	ty = b.position().top + b.height() / 2 + 1;
+	// var pad = 0;
+	var fx = a.position().left + 4;
+	var fy = a.position().top + a.height() / 2 + 1;
+	var tx = b.position().left + b.width() + 2;
+	var ty = b.position().top + b.height() / 2 + 1;
 
-	var cvs = document.getElementById('canvas');
+	var cvs = document.getElementById("canvas");
 
-	var ctx = cvs.getContext('2d');
+	var ctx = cvs.getContext("2d");
 	ctx.lineWidth = 1;
 	ctx.beginPath();
 	ctx.moveTo(tx, ty);
